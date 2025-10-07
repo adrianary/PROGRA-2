@@ -1,7 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
-// POST /etiquetas → Crear etiqueta
+// POST Crear etiqueta
 export const crearEtiqueta = async (req, res, next) => {
   try {
     const { nombre } = req.body;
@@ -35,7 +35,7 @@ export const asociarEtiquetas = async (req, res, next) => {
   }
 };
 
-// GET  Listar etiquetas de una tarea
+// GET  Listar las etiquetas de tarea
 export const listarEtiquetasDeTarea = async (req, res, next) => {
   try {
     const { id } = req.params;

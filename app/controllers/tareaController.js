@@ -1,9 +1,9 @@
 import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
-// ✅ Crear una tarea para un usuario
+
 export const crearTarea = async (req, res) => {
-  const { id } = req.params // id del usuario
+  const { id } = req.params 
   const { titulo, descripcion } = req.body
 
   try {
@@ -21,15 +21,13 @@ export const crearTarea = async (req, res) => {
     res.status(400).json({ error: error.message })
   }
 }
-
-// ✅ Listar todas las tareas de un usuario
 export const listarTareas = async (req, res) => {
-  const { id } = req.params // id del usuario
+  const { id } = req.params 
 
   try {
     const tareas = await prisma.tarea.findMany({
       where: { usuarioId: Number(id) },
-      include: { etiquetas: true } // Incluye las etiquetas asociadas (opcional)
+      include: { etiquetas: true } 
     })
     res.json(tareas)
   } catch (error) {
@@ -37,10 +35,9 @@ export const listarTareas = async (req, res) => {
   }
 }
 
-// ✅ Asociar una o varias etiquetas a una tarea
 export const asociarEtiquetas = async (req, res) => {
-  const { id } = req.params // id de la tarea
-  const { etiquetasIds } = req.body // array de IDs de etiquetas
+  const { id } = req.params 
+  const { etiquetasIds } = req.body
 
   try {
     const tarea = await prisma.tarea.update({
@@ -58,9 +55,8 @@ export const asociarEtiquetas = async (req, res) => {
   }
 }
 
-// ✅ Listar etiquetas asociadas a una tarea
 export const listarEtiquetasDeTarea = async (req, res) => {
-  const { id } = req.params // id de la tarea
+  const { id } = req.params 
 
   try {
     const tarea = await prisma.tarea.findUnique({
