@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Usuario {
+  id        Int       @id @default(autoincrement())
+  nombre    String
+  email     String    @unique
+  perfil    Perfil?
+  tareas    Tarea[]
+}
+
+model Perfil {
+  id        Int      @id @default(autoincrement())
+  bio       String?
+  edad      Int?
+  usuarioId Int      @unique
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id])
+}
+
+model Tarea {
+  id          Int         @id @default(autoincrement())
+  titulo      String
+  descripcion String?
+  usuarioId   Int
+  usuario     Usuario     @relation(fields: [usuarioId], references: [id])
+  etiquetas   TareasEtiquetas[]
+}
+
+model Etiqueta {
+  id        Int               @id @default(autoincrement())
+  nombre    String             @unique
+  tareas    TareasEtiquetas[]
+}
+
+model TareasEtiquetas {
+  tareaId     Int
+  etiquetaId  Int
+  tarea       Tarea     @relation(fields: [tareaId], references: [id])
+  etiqueta    Etiqueta  @relation(fields: [etiquetaId], references: [id])
+  @@id([tareaId, etiquetaId])
+}

@@ -1,0 +1,80 @@
+import { PrismaClient } from '@prisma/client'
+const prisma = new PrismaClient()
+
+// ✅ Crear una tarea para un usuario
+export const crearTarea = async (req, res) => {
+  const { id } = req.params // id del usuario
+  const { titulo, descripcion } = req.body
+
+  try {
+    const tarea = await prisma.tarea.create({
+      data: {
+        titulo,
+        descripcion,
+        usuario: {
+          connect: { id: Number(id) }
+        }
+      }
+    })
+    res.status(201).json(tarea)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
+// ✅ Listar todas las tareas de un usuario
+export const listarTareas = async (req, res) => {
+  const { id } = req.params // id del usuario
+
+  try {
+    const tareas = await prisma.tarea.findMany({
+      where: { usuarioId: Number(id) },
+      include: { etiquetas: true } // Incluye las etiquetas asociadas (opcional)
+    })
+    res.json(tareas)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
+// ✅ Asociar una o varias etiquetas a una tarea
+export const asociarEtiquetas = async (req, res) => {
+  const { id } = req.params // id de la tarea
+  const { etiquetasIds } = req.body // array de IDs de etiquetas
+
+  try {
+    const tarea = await prisma.tarea.update({
+      where: { id: Number(id) },
+      data: {
+        etiquetas: {
+          connect: etiquetasIds.map((etiquetaId) => ({ id: etiquetaId }))
+        }
+      },
+      include: { etiquetas: true }
+    })
+    res.json(tarea)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
+// ✅ Listar etiquetas asociadas a una tarea
+export const listarEtiquetasDeTarea = async (req, res) => {
+  const { id } = req.params // id de la tarea
+
+  try {
+    const tarea = await prisma.tarea.findUnique({
+      where: { id: Number(id) },
+      include: { etiquetas: true }
+    })
+
+    if (!tarea) {
+      return res.status(404).json({ error: 'Tarea no encontrada' })
+    }
+
+    res.json(tarea.etiquetas)
+  } catch (error) {
+    res.status(400).json({ error: error.message })
+  }
+}
+
