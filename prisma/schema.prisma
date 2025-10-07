@@ -29,19 +29,11 @@ model Tarea {
   descripcion String?
   usuarioId   Int
   usuario     Usuario     @relation(fields: [usuarioId], references: [id])
-  etiquetas   TareasEtiquetas[]
+  etiquetas   Etiqueta[]  @relation("TareasEtiquetas")
 }
 
 model Etiqueta {
-  id        Int               @id @default(autoincrement())
-  nombre    String             @unique
-  tareas    TareasEtiquetas[]
-}
-
-model TareasEtiquetas {
-  tareaId     Int
-  etiquetaId  Int
-  tarea       Tarea     @relation(fields: [tareaId], references: [id])
-  etiqueta    Etiqueta  @relation(fields: [etiquetaId], references: [id])
-  @@id([tareaId, etiquetaId])
+  id        Int        @id @default(autoincrement())
+  nombre    String     @unique
+  tareas    Tarea[]    @relation("TareasEtiquetas")
 }

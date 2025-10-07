@@ -36,18 +36,18 @@ export const listarTareas = async (req, res) => {
 }
 
 export const asociarEtiquetas = async (req, res) => {
-  const { id } = req.params 
-  const { etiquetasIds } = req.body
+  const { id } = req.params
+  const { etiquetas } = req.body
 
   try {
     const tarea = await prisma.tarea.update({
       where: { id: Number(id) },
       data: {
         etiquetas: {
-          connect: etiquetasIds.map((etiquetaId) => ({ id: etiquetaId }))
-        }
+          connect: etiquetas.map((etiquetaId) => ({ id: etiquetaId })),
+        },
       },
-      include: { etiquetas: true }
+      include: { etiquetas: true },
     })
     res.json(tarea)
   } catch (error) {

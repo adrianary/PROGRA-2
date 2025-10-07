@@ -12,9 +12,9 @@ router.post('/usuarios/:id/tareas', crearTarea)
 
 router.get('/usuarios/:id/tareas', listarTareas)
 
-router.post('/tareas/:id/etiquetas', asociarEtiquetas)
+router.post('/:id/etiquetas', asociarEtiquetas)
 
-router.get('/tareas/:id/etiquetas', listarEtiquetasDeTarea)
+router.get('/:id/etiquetas', listarEtiquetasDeTarea)
 
 export default router
 
